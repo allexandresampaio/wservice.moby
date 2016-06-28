@@ -17,7 +17,7 @@ public class Core {
 		return "OK";
 	}
 	
-	@POST
+	@GET//era post, mudei para GET e funcionou.
 	@Path("/direcionamento/{id}/{localAtual}/{posicaoRelativa}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Direcionamento solicitarDirecao(
