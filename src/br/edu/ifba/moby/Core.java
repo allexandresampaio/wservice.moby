@@ -8,11 +8,23 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.bson.Document;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+
+import br.edu.ifba.moby.db.FachadaMongo;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 		
 @Path("ws")
 public class Core {
+	
+	private MongoDatabase db = FachadaMongo.getInstancia().getDB();
+	private MongoCollection<Document> colecao = db.getCollection("moby");
+	protected MongoCollection<Document> getColecao(){
+		return colecao;
+	}
 	
 	@GET
 	@Path("/echo")
@@ -31,11 +43,19 @@ public class Core {
 			@PathParam("posicaoRelativa") String posicaoRelativa) {
 		
 		Direcionamento direcao = new Direcionamento(id, localAtual, posicaoRelativa);
-		direcao.calcularDirecao();		
+		direcao.calcularDirecao();
+		
+		Document documento = new Document();
+		documento.append("id", direcao.getId());
+		documento.append("localAtual", direcao.getLocalAtual());
+		documento.append("posicaoRelativa", direcao.getPosicaoRelativa());
+		documento.append("proximaDirecao", direcao.getProximaDirecao());
+		colecao.insertOne(documento);
+		
 		return direcao;	
 	}
 	
-	//Pega por um JSON e devolve a direção
+	//Pega por um JSON e devolve a direcao
 	@POST//era post, mudei para GET e funcionou.
 	@Path("/direcionamento/")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -47,7 +67,15 @@ public class Core {
 		String posicaoRelativa = inputJsonObj.getString("posicaoRelativa");
 		
 		Direcionamento direcao = new Direcionamento(id, localAtual, posicaoRelativa);
-		direcao.calcularDirecao();		
+		direcao.calcularDirecao();	
+		
+		Document documento = new Document();
+		documento.append("id", direcao.getId());
+		documento.append("localAtual", direcao.getLocalAtual());
+		documento.append("posicaoRelativa", direcao.getPosicaoRelativa());
+		documento.append("proximaDirecao", direcao.getProximaDirecao());
+		colecao.insertOne(documento);
+		
 		return direcao.getProximaDirecao();	
 	}
 	
