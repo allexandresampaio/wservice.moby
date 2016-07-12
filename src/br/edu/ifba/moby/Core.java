@@ -2,6 +2,7 @@ package br.edu.ifba.moby;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -21,7 +22,7 @@ public class Core {
 	}
 	
 	//Pega pela URL e cria um JSON
-	@GET//era post, mudei para GET e funcionou.
+	@POST//era post, mudei para GET e funcionou.
 	@Path("/direcionamento/{id}/{localAtual}/{posicaoRelativa}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Direcionamento solicitarDirecao(
@@ -35,7 +36,7 @@ public class Core {
 	}
 	
 	//Pega por um JSON e devolve a direção
-	@GET//era post, mudei para GET e funcionou.
+	@POST//era post, mudei para GET e funcionou.
 	@Path("/direcionamento/")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
