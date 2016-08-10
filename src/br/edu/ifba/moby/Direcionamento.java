@@ -36,7 +36,7 @@ public class Direcionamento {
 		
 		System.out.println(rota);
 		
-		this.proximaDirecao = "teste";
+		this.proximaDirecao = rota;
 	}
 
 	public void calcularDirecao() {
