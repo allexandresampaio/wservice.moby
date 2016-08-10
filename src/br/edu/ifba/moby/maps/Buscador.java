@@ -9,7 +9,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -23,7 +22,7 @@ public class Buscador {
 	public String pegarRota(String origin, String destination, String key) {
 		String resultado = "";
 
-		@SuppressWarnings({ "deprecation", "resource" })
+		@SuppressWarnings({ "resource" })
 		HttpClient cliente = new DefaultHttpClient();
 		HttpGet get = new HttpGet(URL + "json?origin=" + origin
 				+ "&destination=" + destination + "&language=pt-BR&key=" + key);
