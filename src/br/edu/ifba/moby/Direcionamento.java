@@ -2,25 +2,48 @@ package br.edu.ifba.moby;
 
 import java.util.Random;
 
+import br.edu.ifba.moby.maps.Buscador;
+
 public class Direcionamento {
 
 	private String id;
 	private String localAtual;
 	private String posicaoRelativa;
 	private String proximaDirecao;
-	
+	private String destino;
+
 	public Direcionamento(String id, String localAtual, String posicaoRelativa) {
 		this.id = id;
 		this.localAtual = localAtual;
 		this.posicaoRelativa = posicaoRelativa;
 		this.proximaDirecao = null;
+		this.destino = null;
 	};
-	
-	public void calcularDirecao(){
+
+	public Direcionamento(String id, String localAtual, String posicaoRelativa,
+			String destino) {
+		this.id = id;
+		this.localAtual = localAtual;
+		this.destino = destino;
+		this.posicaoRelativa = posicaoRelativa;
+		this.proximaDirecao = null;
+	};
+
+	public void calcularDirecaoMaps(String key){
+		Buscador buscador = new Buscador();
+		String rota;
+		rota = buscador.pegarRota(localAtual, destino, key);
 		
+		System.out.println(rota);
+		
+		this.proximaDirecao = "teste";
+	}
+
+	public void calcularDirecao() {
+
 		Random gerador = new Random();
-		int direcao = gerador.nextInt(4)+1;
-		
+		int direcao = gerador.nextInt(4) + 1;
+
 		switch (direcao) {
 		case 1:
 			this.proximaDirecao = "direita";
@@ -35,9 +58,10 @@ public class Direcionamento {
 			this.proximaDirecao = "retorne";
 			break;
 		default:
-			this.proximaDirecao = "#";;
+			this.proximaDirecao = "#";
+			;
 		}
-		
+
 		System.out.println(this.toString());
 	}
 
@@ -73,11 +97,19 @@ public class Direcionamento {
 		this.proximaDirecao = proximaDirecao;
 	}
 
+	public String getDestino() {
+		return destino;
+	}
+
+	public void setDestino(String destino) {
+		this.destino = destino;
+	}
+
 	@Override
 	public String toString() {
 		return "Direcionamento [id=" + id + ", localAtual=" + localAtual
 				+ ", posicaoRelativa=" + posicaoRelativa + ", proximaDirecao="
 				+ proximaDirecao + "]";
 	}
-	
+
 }

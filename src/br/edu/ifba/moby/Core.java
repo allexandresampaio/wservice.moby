@@ -96,4 +96,13 @@ public class Core {
 		d.calcularDirecao();
 		return d.toString();
 	}
+	
+	@GET
+	@Path("/direcaoMaps")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getDirecaoMaps() {	
+		Direcionamento d = new Direcionamento("123", "-14.858849,-40.820753", "norte", "-14.859793,-40.821965");
+		d.calcularDirecaoMaps("AIzaSyBIGd_k9YaqnMicgl9rdenroLKWYTtqOTk");
+		return d.getProximaDirecao();
+	}
 }
