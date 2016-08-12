@@ -34,7 +34,7 @@ public class Direcionamento {
 		String rota;
 		rota = buscador.pegarRota(localAtual, destino, key);
 		
-		System.out.println(rota);
+		//System.out.println(rota);
 		
 		this.proximaDirecao = rota;
 	}

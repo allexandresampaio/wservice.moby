@@ -105,4 +105,30 @@ public class Core {
 		d.calcularDirecaoMaps("AIzaSyBIGd_k9YaqnMicgl9rdenroLKWYTtqOTk");
 		return d.getProximaDirecao();
 	}
+	
+	//Pega por um JSON e devolve a direcao
+		@POST//era post, mudei para GET e funcionou.
+		@Path("/direcionamentoMaps/")
+		@Produces(MediaType.TEXT_PLAIN)
+		@Consumes(MediaType.APPLICATION_JSON)
+		public String solicitarDirecaoMaps(JSONObject inputJsonObj) throws JSONException {
+			
+			String id = inputJsonObj.getString("id");
+			String localAtual = inputJsonObj.getString("localAtual");
+			String localDestino = inputJsonObj.getString("localDestino");
+			String posicaoRelativa = inputJsonObj.getString("posicaoRelativa");
+			
+			Direcionamento direcao = new Direcionamento(id, localAtual, posicaoRelativa, localDestino);
+			direcao.calcularDirecaoMaps("AIzaSyBIGd_k9YaqnMicgl9rdenroLKWYTtqOTk");	
+			
+			Document documento = new Document();
+			documento.append("id", direcao.getId());
+			documento.append("localAtual", direcao.getLocalAtual());
+			documento.append("localDestino", direcao.getDestino());
+			documento.append("posicaoRelativa", direcao.getPosicaoRelativa());
+			documento.append("proximaDirecao", direcao.getProximaDirecao());
+			colecao.insertOne(documento);
+			
+			return direcao.getProximaDirecao();	
+		}
 }
