@@ -14,7 +14,7 @@ public class ExecutorMongo {
 		DBCollection collection = (DBCollection) db.getCollection("usuarios");
 //		collection.insert(new BasicDBObject().append("nome", "Tex"));
 		
-		save("José", 1, collection);
+		save("Jose", 1, collection);
 //		save("Maria", 2, collection);
 //		save("Joana", 3, collection);
 //		save("Pablo", 4, collection);

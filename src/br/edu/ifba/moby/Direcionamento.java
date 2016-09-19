@@ -10,21 +10,25 @@ public class Direcionamento {
 	private String localAtual;
 	private String posicaoRelativa;
 	private String proximaDirecao;
-	private String destino;
+	private String localDestino;
 
+	public Direcionamento(){
+		
+		
+	}
 	public Direcionamento(String id, String localAtual, String posicaoRelativa) {
 		this.id = id;
 		this.localAtual = localAtual;
 		this.posicaoRelativa = posicaoRelativa;
 		this.proximaDirecao = null;
-		this.destino = null;
+		this.localDestino = null;
 	};
 
 	public Direcionamento(String id, String localAtual, String posicaoRelativa,
 			String destino) {
 		this.id = id;
 		this.localAtual = localAtual;
-		this.destino = destino;
+		this.localDestino = destino;
 		this.posicaoRelativa = posicaoRelativa;
 		this.proximaDirecao = null;
 	};
@@ -32,7 +36,7 @@ public class Direcionamento {
 	public void calcularDirecaoMaps(String key){
 		Buscador buscador = new Buscador();
 		String rota;
-		rota = buscador.pegarRota(localAtual, destino, key);
+		rota = buscador.pegarRota(localAtual, localDestino, key);
 		
 		//System.out.println(rota);
 		
@@ -97,12 +101,12 @@ public class Direcionamento {
 		this.proximaDirecao = proximaDirecao;
 	}
 
-	public String getDestino() {
-		return destino;
+	public String getLocalDestino() {
+		return localDestino;
 	}
 
 	public void setDestino(String destino) {
-		this.destino = destino;
+		this.localDestino = destino;
 	}
 
 	@Override
