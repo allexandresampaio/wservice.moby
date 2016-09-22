@@ -1,5 +1,6 @@
 package br.edu.ifba.moby;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -35,93 +36,101 @@ public class Core {
 	public String echo() {
 		return "OK";
 	}
-/*
-	// Pega pela URL e cria um JSON
-	@POST // era post, mudei para GET e funcionou.
-	@Path("/direcionamento/{id}/{localAtual}/{posicaoRelativa}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Direcionamento solicitarDirecao(@PathParam("id") String id, @PathParam("localAtual") String localAtual,
-			@PathParam("posicaoRelativa") String posicaoRelativa) {
 
-		Direcionamento direcao = new Direcionamento(id, localAtual, posicaoRelativa);
-		direcao.calcularDirecao();
-
-		Document documento = new Document();
-		documento.append("id", direcao.getId());
-		documento.append("localAtual", direcao.getLocalAtual());
-		documento.append("posicaoRelativa", direcao.getPosicaoRelativa());
-		documento.append("proximaDirecao", direcao.getProximaDirecao());
-		colecao.insertOne(documento);
-
-		return direcao;
-	}*/
-
-	// Pega por um JSON e devolve a direcao
-	@POST // era post, mudei para GET e funcionou.
-	@Path("/direcionamento/")
-	//@Produces(MediaType.TEXT_PLAIN)
-	//@Consumes(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	
-	public String solicitarDirecao(JSONObject inputJsonObj) throws JSONException {
-		
-		String id = inputJsonObj.getString("id");
-		String localAtual = inputJsonObj.getString("localAtual");
-		String posicaoRelativa = inputJsonObj.getString("posicaoRelativa");
-
-		Direcionamento direcao = new Direcionamento(id, localAtual, posicaoRelativa);
-		direcao.calcularDirecao();
-
-		Document documento = new Document();
-		documento.append("id", direcao.getId());
-		documento.append("localAtual", direcao.getLocalAtual());
-		documento.append("posicaoRelativa", direcao.getPosicaoRelativa());
-		documento.append("proximaDirecao", direcao.getProximaDirecao());
-		colecao.insertOne(documento);
-
-		return direcao.getProximaDirecao();
-	}
-
-	@GET
-	@Path("/direcao")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getDirecao() {
-		Direcionamento d = new Direcionamento("123", "aqui", "norte");
-		d.calcularDirecao();
-		return d.getProximaDirecao();
-	}
-
-	@GET
-	@Path("/tostring")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String toString() {
-		Direcionamento d = new Direcionamento("123", "aqui", "norte");
-		d.calcularDirecao();
-		return d.toString();
-	}
+	/*
+	 * // Pega pela URL e cria um JSON
+	 * 
+	 * @POST // era post, mudei para GET e funcionou.
+	 * 
+	 * @Path("/direcionamento/{id}/{localAtual}/{posicaoRelativa}")
+	 * 
+	 * @Produces(MediaType.APPLICATION_JSON) public Direcionamento
+	 * solicitarDirecao(@PathParam("id") String id, @PathParam("localAtual")
+	 * String localAtual,
+	 * 
+	 * @PathParam("posicaoRelativa") String posicaoRelativa) {
+	 * 
+	 * Direcionamento direcao = new Direcionamento(id, localAtual,
+	 * posicaoRelativa); direcao.calcularDirecao();
+	 * 
+	 * Document documento = new Document(); documento.append("id",
+	 * direcao.getId()); documento.append("localAtual",
+	 * direcao.getLocalAtual()); documento.append("posicaoRelativa",
+	 * direcao.getPosicaoRelativa()); documento.append("proximaDirecao",
+	 * direcao.getProximaDirecao()); colecao.insertOne(documento);
+	 * 
+	 * return direcao; }
+	 * 
+	 * // Pega por um JSON e devolve a direcao
+	 * 
+	 * @POST // era post, mudei para GET e funcionou.
+	 * 
+	 * @Path("/direcionamento/") //@Produces(MediaType.TEXT_PLAIN)
+	 * //@Consumes(MediaType.APPLICATION_JSON)
+	 * 
+	 * @Consumes(MediaType.APPLICATION_JSON)
+	 * 
+	 * public String solicitarDirecao(JSONObject inputJsonObj) throws
+	 * JSONException {
+	 * 
+	 * String id = inputJsonObj.getString("id"); String localAtual =
+	 * inputJsonObj.getString("localAtual"); String posicaoRelativa =
+	 * inputJsonObj.getString("posicaoRelativa");
+	 * 
+	 * Direcionamento direcao = new Direcionamento(id, localAtual,
+	 * posicaoRelativa); direcao.calcularDirecao();
+	 * 
+	 * Document documento = new Document(); documento.append("id",
+	 * direcao.getId()); documento.append("localAtual",
+	 * direcao.getLocalAtual()); documento.append("posicaoRelativa",
+	 * direcao.getPosicaoRelativa()); documento.append("proximaDirecao",
+	 * direcao.getProximaDirecao()); colecao.insertOne(documento);
+	 * 
+	 * return direcao.getProximaDirecao(); }
+	 * 
+	 * @GET
+	 * 
+	 * @Path("/direcao")
+	 * 
+	 * @Produces(MediaType.TEXT_PLAIN) public String getDirecao() {
+	 * Direcionamento d = new Direcionamento("123", "aqui", "norte");
+	 * d.calcularDirecao(); return d.getProximaDirecao(); }
+	 * 
+	 * @GET
+	 * 
+	 * @Path("/tostring")
+	 * 
+	 * @Produces(MediaType.TEXT_PLAIN) public String toString() { Direcionamento
+	 * d = new Direcionamento("123", "aqui", "norte"); d.calcularDirecao();
+	 * return d.toString(); }
+	 */
 
 	@GET
 	@Path("/direcaoMaps")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getDirecaoMaps() {
-		Direcionamento d = new Direcionamento("1", "-14.858849,-40.820753", "norte", "-14.859793,-40.821965");
+		Direcionamento d = new Direcionamento("1", "-14.858849,-40.820753",
+				"norte", "-14.859793,-40.821965");
 		d.calcularDirecaoMaps("AIzaSyBIGd_k9YaqnMicgl9rdenroLKWYTtqOTk");
 		return d.getProximaDirecao();
 	}
 
 	// Pega por um JSON e devolve a direcao
-	@POST // era post, mudei para GET e funcionou.
+	@POST
+	// era post, mudei para GET e funcionou.
 	@Path("/direcionamentoMaps/")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String solicitarDirecaoMaps(JSONObject inputJsonObj) throws JSONException {
+	public String solicitarDirecaoMaps(JSONObject inputJsonObj)
+			throws JSONException {
 
 		String id = inputJsonObj.getString("id");
 		String localAtual = inputJsonObj.getString("localAtual");
 		String localDestino = inputJsonObj.getString("localDestino");
 		String posicaoRelativa = inputJsonObj.getString("posicaoRelativa");
 
-		Direcionamento direcao = new Direcionamento(id, localAtual, posicaoRelativa, localDestino);
+		Direcionamento direcao = new Direcionamento(id, localAtual,
+				posicaoRelativa, localDestino);
 		direcao.calcularDirecaoMaps("AIzaSyBIGd_k9YaqnMicgl9rdenroLKWYTtqOTk");
 
 		Document documento = new Document();
@@ -141,4 +150,46 @@ public class Core {
 	public List<Direcionamento> listarDirecionamentos() {
 		return FachadaMongo.getInstancia().find();
 	}
+
+	// Pega por um JSON e devolve a direcao
+	@POST
+	@Path("/direcionamentoMapsNovo/")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String solicitarDirecaoMapsNovo(JSONObject inputJsonObj)
+			throws JSONException {
+
+		String id = inputJsonObj.getString("id");
+		String localAtual = inputJsonObj.getString("localAtual");
+		String posicaoRelativa = inputJsonObj.getString("posicaoRelativa");
+		String localDestino = FachadaMongo.getInstancia().findDestino(id);
+		
+		Direcionamento direcao = new Direcionamento(id, localAtual,
+				posicaoRelativa, localDestino);
+		direcao.calcularDirecaoMaps("AIzaSyBIGd_k9YaqnMicgl9rdenroLKWYTtqOTk");
+
+		Document documento = new Document();
+		documento.append("id", direcao.getId());
+		documento.append("localAtual", direcao.getLocalAtual());
+		documento.append("localDestino", direcao.getLocalDestino());
+		documento.append("posicaoRelativa", direcao.getPosicaoRelativa());
+		documento.append("proximaDirecao", direcao.getProximaDirecao());
+		colecao.insertOne(documento);
+
+		return direcao.getProximaDirecao();
+	}
+	
+	@POST
+	@Path("/home/")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void cadastrarDestino(JSONObject inputJsonObj)
+			throws JSONException, ParseException {
+
+		String id = inputJsonObj.getString("id");
+		String datetime = inputJsonObj.getString("datetime");
+		String destino = inputJsonObj.getString("destino");
+		FachadaMongo.getInstancia().insertDestino(id, destino, datetime);
+		}
+
 }
