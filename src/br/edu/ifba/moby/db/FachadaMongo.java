@@ -100,7 +100,7 @@ public class FachadaMongo {
 	}
 
 	public void insertDestino(String id, String coordenada, String datetime) throws ParseException {
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		
 		this.getColecao("destinos").insertOne(
 				new Document("id", id).append(

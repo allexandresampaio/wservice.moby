@@ -1,5 +1,6 @@
 package br.edu.ifba.moby;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -10,10 +11,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.bson.Document;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.omg.CORBA.portable.ApplicationException;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -178,18 +181,20 @@ public class Core {
 
 		return direcao.getProximaDirecao();
 	}
-	
 	@POST
-	@Path("/home/")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Path("/destino/")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void cadastrarDestino(JSONObject inputJsonObj)
-			throws JSONException, ParseException {
+	public Response cadastrarDestino(JSONObject inputJsonObj)
+			throws IOException, ApplicationException, JSONException, ParseException {
 
 		String id = inputJsonObj.getString("id");
 		String datetime = inputJsonObj.getString("datetime");
 		String destino = inputJsonObj.getString("destino");
 		FachadaMongo.getInstancia().insertDestino(id, destino, datetime);
-		}
+	
+		return  Response.ok()
+				.build();
+	}
 
 }
