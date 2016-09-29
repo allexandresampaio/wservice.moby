@@ -197,8 +197,6 @@ public class Core {
 	public String solicitarDirecaoMapsESP(JSONObject inputJsonObj)
 			throws JSONException, ParseException {
 		
-		String dateTime = getDateTime();
-
 		String id = inputJsonObj.getString("id");
 		String posicaoRelativa = inputJsonObj.getString("posicaoRelativa");
 
