@@ -20,7 +20,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-import br.edu.ifba.moby.Destino;
+import br.edu.ifba.moby.Localizacoes;
 import br.edu.ifba.moby.Direcionamento;
 
 public class FachadaMongo {
@@ -82,13 +82,13 @@ public class FachadaMongo {
 	public String findDestino(String id) {
 		MongoCollection colecao = FachadaMongo.getInstancia().getColecao(
 				"destinos");
-		List<Destino> coordenadas = new ArrayList<Destino>();
+		List<Localizacoes> coordenadas = new ArrayList<Localizacoes>();
 		FindIterable<Document> i = colecao.find(new Document("id", id)).sort(
 				new Document("datetime", 1));
 		i.forEach(new Block<Document>() {
 			@Override
 			public void apply(Document documento) {
-				Destino destino = new Destino();
+				Localizacoes destino = new Localizacoes();
 				destino.setCoordenadas(documento.getString("coordenadas")
 						.toString());
 				destino.setId(documento.get("id").toString());
@@ -107,4 +107,34 @@ public class FachadaMongo {
 						"coordenadas", coordenada).append(
 								"datetime", format.parse(datetime)));
 		}
+	
+	// PEGA O ULTIMO LOCALIZACAO DO CARA
+		public String findUltimaLocalizacao(String id) {
+			MongoCollection colecao = FachadaMongo.getInstancia().getColecao(
+					"localizacoes");
+			List<Localizacoes> coordenadas = new ArrayList<Localizacoes>();
+			FindIterable<Document> i = colecao.find(new Document("id", id)).sort(
+					new Document("datetime", 1));
+			i.forEach(new Block<Document>() {
+				@Override
+				public void apply(Document documento) {
+					Localizacoes localizacao = new Localizacoes();
+					localizacao.setCoordenadas(documento.getString("coordenadas")
+							.toString());
+					localizacao.setId(documento.get("id").toString());
+					localizacao.setDatetime(documento.getDate("datetime"));
+					coordenadas.add(localizacao);
+				}
+			});
+			return coordenadas.get(coordenadas.size()-1).getCoordenadas();
+		}
+
+		public void insertUltimaLocalizacao(String id, String coordenada, String datetime) throws ParseException {
+			DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			
+			this.getColecao("localizacoes").insertOne(
+					new Document("id", id).append(
+							"coordenadas", coordenada).append(
+									"datetime", format.parse(datetime)));
+			}
 }

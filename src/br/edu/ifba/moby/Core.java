@@ -1,6 +1,9 @@
 package br.edu.ifba.moby;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -30,6 +33,7 @@ public class Core {
 		return colecao;
 	}
 
+	
 	@GET
 	@Path("/echo")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -103,7 +107,7 @@ public class Core {
 	 * @Produces(MediaType.TEXT_PLAIN) public String toString() { Direcionamento
 	 * d = new Direcionamento("123", "aqui", "norte"); d.calcularDirecao();
 	 * return d.toString(); }
-	 */
+	 
 
 	@GET
 	@Path("/direcaoMaps")
@@ -143,7 +147,9 @@ public class Core {
 
 		return direcao.getProximaDirecao();
 	}
-
+*/
+	
+	
 	@GET
 	@Path("/registros")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -157,15 +163,17 @@ public class Core {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String solicitarDirecaoMapsNovo(JSONObject inputJsonObj)
-			throws JSONException {
+			throws JSONException, ParseException {
+		
+		String dateTime = getDateTime();
 
 		String id = inputJsonObj.getString("id");
 		String localAtual = inputJsonObj.getString("localAtual");
 		String posicaoRelativa = inputJsonObj.getString("posicaoRelativa");
-		String localDestino = FachadaMongo.getInstancia().findDestino(id);
 		
-		Direcionamento direcao = new Direcionamento(id, localAtual,
-				posicaoRelativa, localDestino);
+		cadastrarLocalizacao(id, localAtual, dateTime);
+		
+		Direcionamento direcao = new Direcionamento(id, posicaoRelativa);
 		direcao.calcularDirecaoMaps("AIzaSyBIGd_k9YaqnMicgl9rdenroLKWYTtqOTk");
 
 		Document documento = new Document();
@@ -179,6 +187,36 @@ public class Core {
 		return direcao.getProximaDirecao();
 	}
 	
+	//faz o mesmo direcionamento, soh que agora pega no banco
+	//a ultima localizacao do usuario pelo id e calcula
+	//ultimalocalizacao ate o destino final
+	@POST
+	@Path("/direcionamentoMapsESP/")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String solicitarDirecaoMapsESP(JSONObject inputJsonObj)
+			throws JSONException, ParseException {
+		
+		String dateTime = getDateTime();
+
+		String id = inputJsonObj.getString("id");
+		String posicaoRelativa = inputJsonObj.getString("posicaoRelativa");
+
+		Direcionamento direcao = new Direcionamento(id, posicaoRelativa);
+		direcao.calcularDirecaoMaps("AIzaSyBIGd_k9YaqnMicgl9rdenroLKWYTtqOTk");
+
+		Document documento = new Document();
+		documento.append("id", direcao.getId());
+		documento.append("localAtual", direcao.getLocalAtual());
+		documento.append("localDestino", direcao.getLocalDestino());
+		documento.append("posicaoRelativa", direcao.getPosicaoRelativa());
+		documento.append("proximaDirecao", direcao.getProximaDirecao());
+		colecao.insertOne(documento);
+
+		return direcao.getProximaDirecao();
+	}
+
+	
 	@POST
 	@Path("/home/")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -191,5 +229,15 @@ public class Core {
 		String destino = inputJsonObj.getString("destino");
 		FachadaMongo.getInstancia().insertDestino(id, destino, datetime);
 		}
+	
+	public void cadastrarLocalizacao(String id, String coordenada, String datetime) throws ParseException{
+		FachadaMongo.getInstancia().insertUltimaLocalizacao(id, coordenada, datetime);
+	}
+
+	private String getDateTime() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		Date date = new Date();
+		return dateFormat.format(date);
+	}
 
 }
