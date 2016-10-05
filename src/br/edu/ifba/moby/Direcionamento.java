@@ -2,6 +2,7 @@ package br.edu.ifba.moby;
 
 import java.util.Random;
 
+import br.edu.ifba.moby.db.FachadaMongo;
 import br.edu.ifba.moby.maps.Buscador;
 
 public class Direcionamento {
@@ -29,6 +30,14 @@ public class Direcionamento {
 		this.id = id;
 		this.localAtual = localAtual;
 		this.localDestino = destino;
+		this.posicaoRelativa = posicaoRelativa;
+		this.proximaDirecao = null;
+	};
+	
+	public Direcionamento(String id, String posicaoRelativa) {
+		this.id = id;
+		this.localAtual = FachadaMongo.getInstancia().findUltimaLocalizacao(id);
+		this.localDestino = FachadaMongo.getInstancia().findDestino(id);
 		this.posicaoRelativa = posicaoRelativa;
 		this.proximaDirecao = null;
 	};
