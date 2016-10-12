@@ -80,8 +80,7 @@ public class FachadaMongo {
 
 	// PEGA O ULTIMO LOCAL DE DESTINO DO CARA
 	public String findDestino(String id) {
-		MongoCollection colecao = FachadaMongo.getInstancia().getColecao(
-				"destinos");
+		MongoCollection colecao = FachadaMongo.getInstancia().getColecao("destinos");
 		List<Localizacoes> coordenadas = new ArrayList<Localizacoes>();
 		FindIterable<Document> i = colecao.find(new Document("id", id)).sort(
 				new Document("datetime", 1));
