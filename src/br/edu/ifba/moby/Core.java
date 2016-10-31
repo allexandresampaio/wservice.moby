@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,8 @@ public class Core {
 
 	private MongoDatabase db = FachadaMongo.getInstancia().getDB();
 	private MongoCollection<Document> colecao = db.getCollection("moby");
-
+	private static ArrayList<String> direcoes = new ArrayList<>();
+	
 	protected MongoCollection<Document> getColecao() {
 		return colecao;
 	}
@@ -41,7 +43,7 @@ public class Core {
 	@Path("/echo")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String echo() {
-		return "OK";
+		return "2";
 	}
 
 	
@@ -107,7 +109,8 @@ public class Core {
 		documento.append("posicaoRelativa", direcao.getPosicaoRelativa());
 		documento.append("proximaDirecao", direcao.getProximaDirecao());
 		colecao.insertOne(documento);
-
+		
+		direcoes.add(direcao.getProximaDirecao());
 		return direcao.getProximaDirecao();
 		
 		
@@ -164,5 +167,25 @@ public class Core {
 		Date date = new Date();
 		return dateFormat.format(date);
 	}
-
+	
+	@GET
+	@Path("/direcoes/")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String getDirecoes() {
+		String dir = direcoes.get(direcoes.size()-1);
+		String cod = "";
+		System.out.println(dir);
+		if(dir.equals("turn-left")){
+			cod = "1";
+		System.out.println("Vira a esquerda");
+		}
+		else if (dir.equals("turn-right")){
+			cod = "2";
+		System.out.println("Vira a direita");
+		}else{
+			cod = "3";
+		}
+		return cod;
+	}
 }
