@@ -2,7 +2,7 @@
 
 //Dados WIFI  
 const char* ssid = "dd-wrt";
-const char* password = "ddwrt#$16";
+const char* password = "";
 
 IPAddress server(192,168,1,117);
 int servoPin = 2;
